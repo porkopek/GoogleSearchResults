@@ -1,0 +1,27 @@
+.pZvJc.jf0C1c {
+  display: block !important;
+  z-index: 1111111111111111111111111111;
+  background: white;
+  position: fixed;
+  border: 1px solid red;
+}
+#result-stats {
+  background: yellow;
+  position: fixed;
+  right: 0px !important;
+  top: 0px;
+  font-size: 18px;
+  padding: 5px 6px 5px 12px;
+  border-radius: 7px;
+
+  z-index: 11111111111111111111111111;
+}
+.R0DW9c:not(.vpR9sb) {
+  display: block !important;
+  top: -400px;
+  position: fixed;
+  z-index: 111111111111111111111111111 !important;
+}
+.R0DW9c:not(.vpR9sb) * {
+  opacity: unset;
+}

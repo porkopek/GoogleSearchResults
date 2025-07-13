@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Google Results CSS Injector",
+  "version": "1.0",
+  "description": "Injects custom CSS into Google search pages",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.google.com/search*",
+        "*://google.com/search*",
+        "*://*.google.com/search*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_title": "Google Results CSS Injector"
+  }
+}
