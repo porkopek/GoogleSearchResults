@@ -48,10 +48,10 @@ Works on all Google search pages including:
 
 ## 🛡️ Privacy & Permissions
 
+- **activeTab**: Access current tab to read search results
 - **storage**: Save your preferred box position
 - **No data collection**: Extension works entirely locally
 - **No external requests**: All processing happens in your browser
-- **Minimal permissions**: Only requests storage access for position memory
 
 ## 📋 Technical Details
 

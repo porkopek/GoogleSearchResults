@@ -40,17 +40,26 @@ Productivity
 
 ## Privacy Policy
 
-This extension does not collect, store, or transmit any personal data. All processing happens locally in your browser. The only data stored is your preferred position for the results box, which is saved locally on your device using Chrome's storage API.
+This extension does not collect, store, or transmit any personal data. All processing happens locally in your browser. The only data stored is your preferred position for the results box, which is saved locally on your device using Chrome's storage API. No network access or tab permissions are required.
 
 ## Store Assets Checklist
 
-- [ ] Icon 16x16px
-- [ ] Icon 32x32px
-- [ ] Icon 48x48px
-- [ ] Icon 128x128px
-- [ ] Screenshot 1280x800px (at least 1, max 5)
-- [ ] Promotional tile 440x280px (optional)
-- [ ] Marquee promo 1400x560px (optional)
+✅ **Icon Assets (Included in Extension Package)**
+- [x] Icon 16x16px - `icons/icon16.png`
+- [x] Icon 32x32px - `icons/icon32.png`  
+- [x] Icon 48x48px - `icons/icon48.png`
+- [x] Icon 128x128px - `icons/icon128.png`
+
+✅ **Visual Assets (Generated from extension_in_use.png)**
+- [x] Screenshot 1280x800px - `images/screenshot.png`
+- [x] Small promotional tile 440x280px - `images/small_promo.png`
+- [x] Large promotional tile 920x680px - `images/large_promo.png`
+
+📁 **Upload Instructions:**
+- **Extension Package:** Upload `google-search-results-counter-v1.0.0.zip`
+- **Screenshots:** Upload `images/screenshot.png` in store dashboard
+- **Promotional Images:** Upload small_promo.png and large_promo.png in dashboard
+- **Store Description:** Use the detailed description above
 
 ## Version Notes
 
