@@ -1,81 +1,130 @@
-// Content script for Google Results Stats Display
-// This script captures the text from #result-stats and displays it in a custom yellow box
+// Google Search Results Display Extension
+// Displays Google search result count in a draggable yellow box
 
-console.log('Google Results Stats Display: Content script loaded');
+let statsBox = null;
 
-let customStatsDisplay = null;
-
-function createCustomStatsDisplay() {
-  // Create the custom display element
-  const statsBox = document.createElement('div');
-  statsBox.id = 'custom-result-stats';
-
-  // Apply styles for the yellow box in top-right corner
-  statsBox.style.cssText = `
-        background: yellow;
-        position: fixed;
-        right: 0px;
-        top: 0px;
-        font-size: 18px;
-        padding: 5px 6px 5px 12px;
-        border-radius: 7px;
-        z-index: 99999;
-        border: 1px solid #ccc;
-        font-family: arial, sans-serif;
-        color: #333;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        max-width: 300px;
-        word-wrap: break-word;
-    `;
-
-  // Add to page
-  document.body.appendChild(statsBox);
-  customStatsDisplay = statsBox;
-
-  console.log('Custom stats display created');
-  return statsBox;
+function savePosition(x, y) {
+  chrome.storage.local.set({
+    statsBoxPosition: { x: x, y: y },
+  });
 }
 
-function updateStatsDisplay() {
-  // Find the original result-stats element
-  const originalStats = document.querySelector('#result-stats');
-
-  if (originalStats && customStatsDisplay) {
-    const statsText = originalStats.textContent.trim();
-    if (statsText) {
-      customStatsDisplay.textContent = statsText;
-      customStatsDisplay.style.display = 'block';
-      console.log('Stats updated:', statsText);
+function loadPosition(callback) {
+  chrome.storage.local.get(['statsBoxPosition'], result => {
+    if (result.statsBoxPosition) {
+      callback(result.statsBoxPosition.x, result.statsBoxPosition.y);
+    } else {
+      callback(null, null);
     }
-  } else if (customStatsDisplay) {
-    // Hide if no stats found
-    customStatsDisplay.style.display = 'none';
+  });
+}
+
+function makeDraggable(element) {
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  element.style.cursor = 'move';
+  element.style.userSelect = 'none';
+
+  element.addEventListener('mousedown', e => {
+    isDragging = true;
+    const rect = element.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    document.body.style.cursor = 'move';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+
+    const newX = e.clientX - offsetX;
+    const newY = e.clientY - offsetY;
+    const maxX = window.innerWidth - element.offsetWidth;
+    const maxY = window.innerHeight - element.offsetHeight;
+    const constrainedX = Math.max(0, Math.min(newX, maxX));
+    const constrainedY = Math.max(0, Math.min(newY, maxY));
+
+    element.style.left = constrainedX + 'px';
+    element.style.top = constrainedY + 'px';
+    element.style.right = 'auto';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      document.body.style.cursor = 'auto';
+      const rect = element.getBoundingClientRect();
+      savePosition(rect.left, rect.top);
+    }
+  });
+}
+
+function createStatsBox(text) {
+  if (statsBox) {
+    statsBox.remove();
+    statsBox = null;
+  }
+
+  const box = document.createElement('div');
+  box.textContent = text;
+  box.id = 'google-results-stats-box';
+  box.style.cssText = `
+    background: #ffeb3b;
+    position: fixed;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    z-index: 99999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #333;
+    cursor: move;
+    user-select: none;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    font-weight: 500;
+    white-space: nowrap;
+  `;
+
+  loadPosition((savedX, savedY) => {
+    if (savedX !== null && savedY !== null) {
+      box.style.left = savedX + 'px';
+      box.style.top = savedY + 'px';
+      box.style.right = 'auto';
+    } else {
+      box.style.right = '10px';
+      box.style.top = '10px';
+    }
+  });
+
+  makeDraggable(box);
+  document.body.appendChild(box);
+  statsBox = box;
+}
+
+function captureResultStats() {
+  if (statsBox) return;
+
+  const resultStats = document.querySelector('#result-stats');
+  if (!resultStats) return;
+
+  const statsText = resultStats.textContent.trim();
+  if (statsText) {
+    const cleanText = statsText
+      .replace(/About\s*/i, '')
+      .replace(/\s*\([^)]*\)/g, '')
+      .trim();
+
+    if (cleanText) {
+      createStatsBox(cleanText);
+    }
   }
 }
 
-function initializeStatsCapture() {
-  // Create the custom display
-  createCustomStatsDisplay();
-
-  // Initial update
-  updateStatsDisplay();
-
-  // Set up observer to watch for changes (for when user performs new searches)
-  const observer = new MutationObserver(() => {
-    updateStatsDisplay();
-  });
-
-  // Observe changes to the entire document
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    characterData: true,
-  });
-}
-
-// Wait for DOM to be ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeStatsCapture);
+  document.addEventListener('DOMContentLoaded', captureResultStats);
 } else {
-  initializeStatsCapture();
+  captureResultStats();
 }
