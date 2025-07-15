@@ -1,10 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Google Search Results Counter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Displays Google search result count in a clean, draggable box. Move it anywhere on the page and the position is remembered.",
   "author": "porkopek",
-  "permissions": ["activeTab", "storage"],
+  "homepage_url": "https://github.com/porkopek/GoogleSearchResults",
+  "permissions": ["storage"],
+  "host_permissions": [],
   "content_scripts": [
     {
       "matches": [
@@ -401,12 +403,20 @@
     }
   ],
   "action": {
-    "default_title": "Google Search Results Counter"
+    "default_title": "Google Search Results Counter",
+    "default_popup": "",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "minimum_chrome_version": "88"
 }

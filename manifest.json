@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Google Search Results Counter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Displays Google search result count in a clean, draggable box. Move it anywhere on the page and the position is remembered.",
   "author": "porkopek",
   "homepage_url": "https://github.com/porkopek/GoogleSearchResults",

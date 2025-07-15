@@ -104,33 +104,23 @@ function createStatsBox(text) {
   statsBox = box;
 }
 
-function findResultStats() {
-  // Try multiple selectors for finding result stats
-  const selectors = [
-    '#result-stats',
-    '.result-stats',
-    '[data-async-context*="result-stats"]',
-    'div:contains("results")',
-    '[role="status"]',
-  ];
+function getStatsElement() {
+  const selector = '#result-stats';
 
-  for (const selector of selectors) {
-    const element = document.querySelector(selector);
-    if (element && element.textContent.trim()) {
-      return element;
-    }
+  const element = document.querySelector(selector);
+  if (element && element.textContent.trim()) {
+    return element;
   }
-  return null;
 }
 
 function captureResultStats(attempt = 1) {
   if (statsBox) return;
 
-  const resultStats = findResultStats();
+  const resultStats = getStatsElement();
 
   if (!resultStats) {
-    // Retry up to 10 times with increasing delays
-    if (attempt <= 10) {
+    // Retry up to 5 times with increasing delays
+    if (attempt <= 5) {
       setTimeout(() => {
         captureResultStats(attempt + 1);
       }, attempt * 500); // 500ms, 1s, 1.5s, 2s, etc.
@@ -151,12 +141,9 @@ function captureResultStats(attempt = 1) {
   }
 }
 
-// Multiple initialization strategies
 function initializeExtension() {
-  // Try immediately
   captureResultStats();
 
-  // Also try after a short delay for dynamic content
   setTimeout(() => captureResultStats(), 1000);
 
   // Watch for dynamic changes
@@ -171,8 +158,7 @@ function initializeExtension() {
     subtree: true,
   });
 
-  // Stop observing after 30 seconds to prevent performance issues
-  setTimeout(() => observer.disconnect(), 30000);
+  setTimeout(() => observer.disconnect(), 5000);
 }
 
 if (document.readyState === 'loading') {
