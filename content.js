@@ -130,13 +130,14 @@ function captureResultStats(attempt = 1) {
 
   const statsText = resultStats.textContent.trim();
   if (statsText) {
-    const cleanText = statsText
-      .replace(/About\s*/i, '')
-      .replace(/\s*\([^)]*\)/g, '')
+    const numberText = statsText
+      .replace(/[^\d,.\s']/gu, '')
+      .replace(/^[,.\s']+|[,.\s']+$/g, '') // Remove separators from start/end
+      .replace(/[,.\s']+(?=[,.\s'])/g, '') // Remove consecutive separators
       .trim();
 
-    if (cleanText && (cleanText.includes('result') || /\d/.test(cleanText))) {
-      createStatsBox(cleanText);
+    if (numberText && /\d/.test(numberText)) {
+      createStatsBox(numberText);
     }
   }
 }
