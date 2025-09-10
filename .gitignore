@@ -20,3 +20,5 @@ package/
 
 # Logs
 *.log
+
+*.zip
