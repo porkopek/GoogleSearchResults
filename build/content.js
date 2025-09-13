@@ -134,7 +134,8 @@ function captureResultStats(attempt = 1) {
       .replace(/[^\d,.\s']/gu, '')
       .replace(/^[,.\s']+|[,.\s']+$/g, '') // Remove separators from start/end
       .replace(/[,.\s']+(?=[,.\s'])/g, '') // Remove consecutive separators
-      .trim();
+      .trim()
+      .split(' ')[0]; // Get the first number-like part
 
     if (numberText && /\d/.test(numberText)) {
       createStatsBox(numberText);
